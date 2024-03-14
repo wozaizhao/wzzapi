@@ -46,3 +46,19 @@ func UserAuth() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func AdminAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		claims, errorTokenValidator := TokenValidator(c)
+		if errorTokenValidator != nil {
+			common.LogError("TokenValidator", errorTokenValidator)
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		c.Set("adminID", claims.AdminID)
+
+		// todo 查询用户状态,判断帐号是否已禁用
+		c.Next()
+	}
+}
