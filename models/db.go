@@ -18,7 +18,7 @@ var DB *gorm.DB
 
 // Models 数据库实体
 var models = []interface{}{
-	&User{}, &Admin{},
+	&User{}, &Admin{}, &Menu{}, &Role{},
 }
 
 var newLogger = logger.New(
