@@ -17,9 +17,13 @@ type Admin struct {
 	Avatar      string         `json:"avatar" gorm:"type:varchar(255);DEFAULT '';comment:头像网址"`
 	Email       string         `json:"email" gorm:"unique type:varchar(255);DEFAULT '';comment:email"`
 	PhoneNumber string         `json:"phoneNumber" gorm:"unique type:varchar(20);DEFAULT '';comment:手机号"`
-	Roles       []Role         `json:"roles" gorm:"many2many:admin_roles;"`
+	Roles       []Role         `json:"roles" gorm:"many2many:sys_admin_roles;"`
 	Permissions []string       `json:"permissions" gorm:"-"`
 	Status      int            `json:"status" gorm:"type:tinyint(1);DEFAULT 0;comment:状态"`
+}
+
+func (Admin) TableName() string {
+	return "sys_admins"
 }
 
 func CreateAdmin(account, phoneNumber, email, password string) error {

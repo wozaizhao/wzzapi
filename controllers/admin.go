@@ -45,11 +45,10 @@ func GetCurrentAdmin(c *gin.Context) {
 }
 
 type adminAddAdminParam struct {
-	Account     string `json:"account" binding:"required"`
-	PhoneNumber string `json:"phoneNumber" binding:"required"`
-	Email       string `json:"email" binding:"required"`
-	CompanyID   uint   `json:"companyID" binding:"required"`
-	Password    string `json:"password"`
+	Account     string `json:"account"`
+	PhoneNumber string `json:"phoneNumber"`
+	Email       string `json:"email"`
+	Password    string `json:"password" binding:"required"`
 }
 
 func AdminAddAdmin(c *gin.Context) {

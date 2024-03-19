@@ -33,6 +33,10 @@ type Menu struct {
 	// hidden isFrame keepAlive title
 }
 
+func (Menu) TableName() string {
+	return "sys_menus"
+}
+
 func AddMenu(name, path, autoCode, component, icon, frameSrc, title string, thetype, parentID, sort uint, hidden, isFrame, keepAlive, frameBlank bool) error {
 	r := Menu{Name: name, Path: path, Type: thetype, Title: title, AuthCode: autoCode, ParentID: parentID, Component: component, Sort: sort, Icon: icon, Hidden: hidden, IsFrame: isFrame, KeepAlive: keepAlive, FrameBlank: frameBlank, FrameSrc: frameSrc}
 	result := DB.Create(&r)

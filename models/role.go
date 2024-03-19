@@ -15,8 +15,12 @@ type Role struct {
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 	Name      string         `json:"name" gorm:"unique type:varchar(40);DEFAULT '';comment:角色名称"`
 	Remark    string         `json:"remark" gorm:"type:varchar(100);DEFAULT '';comment:备注"`
-	Menus     []Menu         `json:"menus" gorm:"many2many:role_menus;"`
+	Menus     []Menu         `json:"menus" gorm:"many2many:sys_role_menus;"`
 	Status    int            `json:"status" gorm:"type:tinyint(1);DEFAULT 0;comment:状态"`
+}
+
+func (Role) TableName() string {
+	return "sys_roles"
 }
 
 func AddRole(name, remark string, menuIDs []uint) error {
