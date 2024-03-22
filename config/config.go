@@ -33,6 +33,7 @@ type Config struct {
 		Database string `yaml:"database"`
 	} `yaml:"mysql"`
 	JwtSecret        string `yaml:"jwtsecret"`
+	EncryptionKey    string `yaml:"encryptionKey"`
 	*TecentSMSConfig `yaml:"TecentSMSConfig"`
 }
 

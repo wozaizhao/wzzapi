@@ -27,6 +27,7 @@ func main() {
 		common.SetTimeZone(sh)
 	}
 
+	models.SetKey([]byte(cfg.EncryptionKey))
 	models.DBinit()
 
 	r.Run(cfg.Listen)

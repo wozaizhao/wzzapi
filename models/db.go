@@ -1,20 +1,29 @@
 package models
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"strings"
 	"time"
-
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"wozaizhao.com/wzzapi/common"
 	"wozaizhao.com/wzzapi/config"
 )
 
 // DB 数据库
 var DB *gorm.DB
+
+// 密钥
+var key []byte
+
+func SetKey(val []byte) {
+	key = val
+}
 
 // Models 数据库实体
 var models = []interface{}{
@@ -59,6 +68,26 @@ func DBinit() {
 		// }
 	}
 
+}
+
+// 加密函数
+func encrypt(data string) string {
+	block, _ := aes.NewCipher(key)
+	gcm, _ := cipher.NewGCM(block)
+	nonce := make([]byte, gcm.NonceSize())
+	ciphertext := gcm.Seal(nonce, nonce, []byte(data), nil)
+	return base64.StdEncoding.EncodeToString(ciphertext)
+}
+
+// 解密函数
+func decrypt(data string) string {
+	block, _ := aes.NewCipher(key)
+	gcm, _ := cipher.NewGCM(block)
+	ciphertext, _ := base64.StdEncoding.DecodeString(data)
+	nonceSize := gcm.NonceSize()
+	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
+	plaintext, _ := gcm.Open(nil, nonce, ciphertext, nil)
+	return string(plaintext)
 }
 
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
