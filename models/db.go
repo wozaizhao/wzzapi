@@ -3,10 +3,13 @@ package models
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -70,24 +73,53 @@ func DBinit() {
 
 }
 
-// 加密函数
-func encrypt(data string) string {
-	block, _ := aes.NewCipher(key)
-	gcm, _ := cipher.NewGCM(block)
-	nonce := make([]byte, gcm.NonceSize())
-	ciphertext := gcm.Seal(nonce, nonce, []byte(data), nil)
-	return base64.StdEncoding.EncodeToString(ciphertext)
+func encrypt(message string) (encoded string, err error) {
+	plainText := []byte(message)
+
+	block, err := aes.NewCipher(key)
+
+	if err != nil {
+		return
+	}
+
+	cipherText := make([]byte, aes.BlockSize+len(plainText))
+
+	iv := cipherText[:aes.BlockSize]
+	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
+		return
+	}
+
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(cipherText[aes.BlockSize:], plainText)
+
+	return base64.RawStdEncoding.EncodeToString(cipherText), err
 }
 
-// 解密函数
-func decrypt(data string) string {
-	block, _ := aes.NewCipher(key)
-	gcm, _ := cipher.NewGCM(block)
-	ciphertext, _ := base64.StdEncoding.DecodeString(data)
-	nonceSize := gcm.NonceSize()
-	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
-	plaintext, _ := gcm.Open(nil, nonce, ciphertext, nil)
-	return string(plaintext)
+func decrypt(secure string) (decoded string, err error) {
+	cipherText, err := base64.RawStdEncoding.DecodeString(secure)
+
+	if err != nil {
+		return
+	}
+
+	block, err := aes.NewCipher(key)
+
+	if err != nil {
+		return
+	}
+
+	if len(cipherText) < aes.BlockSize {
+		err = errors.New("ciphertext_block_size_is_too_short")
+		return
+	}
+
+	iv := cipherText[:aes.BlockSize]
+	cipherText = cipherText[aes.BlockSize:]
+
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(cipherText, cipherText)
+
+	return string(cipherText), err
 }
 
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
