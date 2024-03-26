@@ -1,10 +1,10 @@
 package models
 
 import (
+	log "github.com/sirupsen/logrus"
 	"time"
 
 	"gorm.io/gorm"
-	"wozaizhao.com/wzzapi/common"
 )
 
 // 角色
@@ -53,7 +53,7 @@ func UpdateRole(id uint, name, remark string, menuIDs []uint) error {
 	// 清除旧的关联数据
 	errClear := DB.Model(&role).Association("Menus").Delete(role.Menus)
 	if errClear != nil {
-		common.LogError("errClear", errClear)
+		log.Errorf("UpdateRole Failed: %s", errClear)
 		return errClear
 	}
 

@@ -3,9 +3,9 @@ package controllers
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
-	"wozaizhao.com/wzzapi/common"
 )
 
 type AuthHeader struct {
@@ -35,7 +35,7 @@ func UserAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claims, errorTokenValidator := TokenValidator(c)
 		if errorTokenValidator != nil {
-			common.LogError("TokenValidator", errorTokenValidator)
+			log.Errorf("TokenValidator Failed: %s", errorTokenValidator)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -51,7 +51,7 @@ func AdminAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claims, errorTokenValidator := TokenValidator(c)
 		if errorTokenValidator != nil {
-			common.LogError("TokenValidator", errorTokenValidator)
+			log.Errorf("TokenValidator Failed: %s", errorTokenValidator)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}

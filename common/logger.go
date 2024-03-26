@@ -1,7 +1,7 @@
 package common
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/sirupsen/logrus"
 	"os"
 	"time"
@@ -19,14 +19,14 @@ func LogToFile() {
 	}
 }
 
-// Log 记录日志
-func LogError(ns string, log interface{}) {
-	logrus.Error(fmt.Sprintf("[%s] failed: ,%+v", ns, log))
-}
-func LogInfo(ns string, log interface{}) {
-	logrus.Info(fmt.Sprintf("[%s],%+v", ns, log))
-}
+// // Log 记录日志
+// func LogError(ns string, log interface{}) {
+// 	logrus.Error(fmt.Sprintf("[%s] failed: ,%+v", ns, log))
+// }
+// func LogInfo(ns string, log interface{}) {
+// 	logrus.Info(fmt.Sprintf("[%s],%+v", ns, log))
+// }
 
-func LogDebug(ns string, log interface{}) {
-	logrus.Debugf(fmt.Sprintf("[%s],%s", ns, log))
-}
+// func LogDebug(ns string, log interface{}) {
+// 	logrus.Debugf(fmt.Sprintf("[%s],%s", ns, log))
+// }

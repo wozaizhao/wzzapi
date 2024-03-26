@@ -1,6 +1,7 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"time"
 
 	"wozaizhao.com/wzzapi/common"
@@ -21,7 +22,7 @@ func main() {
 	// 加载东八区时区
 	sh, err := time.LoadLocation("Asia/Shanghai")
 	if err != nil {
-		common.LogError("LoadLocation", err)
+		log.Errorf("LoadLocation Failed: %s", err)
 		return
 	} else {
 		common.SetTimeZone(sh)

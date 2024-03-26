@@ -6,15 +6,15 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"io"
-	"log"
+	_log "log"
 	"os"
 	"strings"
 	"time"
-	"wozaizhao.com/wzzapi/common"
 	"wozaizhao.com/wzzapi/config"
 )
 
@@ -34,7 +34,7 @@ var models = []interface{}{
 }
 
 var newLogger = logger.New(
-	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+	_log.New(os.Stdout, "\r\n", _log.LstdFlags), // io writer
 	logger.Config{
 		SlowThreshold:             time.Second, // Slow SQL threshold
 		LogLevel:                  logger.Info, // Log level Silent Info for more infomation
@@ -51,14 +51,14 @@ func DBinit() {
 	if db, err := gorm.Open(mysql.Open(ds), &gorm.Config{
 		Logger: newLogger,
 	}); err != nil {
-		common.LogError("DBinit", err)
+		log.Errorf("DBinit Failed: %s", err)
 		os.Exit(0)
 	} else {
 		DB = db
 		// DB.LogMode(true)
 		sqlDB, err := db.DB()
 		if err != nil {
-			common.LogError("db.DB", err)
+			log.Errorf("DBinit Failed: %s", err)
 		}
 		// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
 		sqlDB.SetMaxIdleConns(10)
