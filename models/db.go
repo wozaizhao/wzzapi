@@ -30,7 +30,7 @@ func SetKey(val []byte) {
 
 // Models 数据库实体
 var models = []interface{}{
-	&User{}, &Admin{}, &Menu{}, &Role{},
+	&User{}, &Admin{}, &Menu{}, &Role{}, &NotifyDingtalk{}, &NotifyWecom{},
 }
 
 var newLogger = logger.New(
