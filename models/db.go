@@ -73,12 +73,13 @@ func DBinit() {
 
 }
 
-func encrypt(message string) (encoded string, err error) {
+func encrypt(message string) (encoded string) {
 	plainText := []byte(message)
 
 	block, err := aes.NewCipher(key)
 
 	if err != nil {
+		log.Errorf("encrypt Failed: %s", err)
 		return
 	}
 
@@ -86,19 +87,21 @@ func encrypt(message string) (encoded string, err error) {
 
 	iv := cipherText[:aes.BlockSize]
 	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
+		log.Errorf("encrypt Failed: %s", err)
 		return
 	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(cipherText[aes.BlockSize:], plainText)
 
-	return base64.RawStdEncoding.EncodeToString(cipherText), err
+	return base64.RawStdEncoding.EncodeToString(cipherText)
 }
 
-func decrypt(secure string) (decoded string, err error) {
+func decrypt(secure string) (decoded string) {
 	cipherText, err := base64.RawStdEncoding.DecodeString(secure)
 
 	if err != nil {
+		log.Errorf("decrypt Failed: %s", err)
 		return
 	}
 
@@ -110,6 +113,7 @@ func decrypt(secure string) (decoded string, err error) {
 
 	if len(cipherText) < aes.BlockSize {
 		err = errors.New("ciphertext_block_size_is_too_short")
+		log.Errorf("decrypt Failed: %s", err)
 		return
 	}
 
@@ -119,7 +123,7 @@ func decrypt(secure string) (decoded string, err error) {
 	stream := cipher.NewCFBDecrypter(block, iv)
 	stream.XORKeyStream(cipherText, cipherText)
 
-	return string(cipherText), err
+	return string(cipherText)
 }
 
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
@@ -164,3 +168,28 @@ func FieldIn(fieldName string, value interface{}) func(db *gorm.DB) *gorm.DB {
 		return db.Where(fieldName+" IN (?)", value)
 	}
 }
+
+// // 增加
+// func Create() {
+
+// }
+
+// // 删除
+// func Delete() {
+
+// }
+
+// // 更新
+// func Update() {
+
+// }
+
+// // 查询列表
+// func Get List() {
+
+// }
+
+// // 查询单个
+// func Get ByID() {
+
+// }

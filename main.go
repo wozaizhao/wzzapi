@@ -4,8 +4,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"time"
 
-	"wozaizhao.com/wzzapi/common"
 	"wozaizhao.com/wzzapi/config"
+	"wozaizhao.com/wzzapi/global"
 	"wozaizhao.com/wzzapi/models"
 	"wozaizhao.com/wzzapi/router"
 )
@@ -17,7 +17,7 @@ func main() {
 	cfg := config.GetConfig()
 
 	if cfg.Mode == "production" {
-		common.LogToFile()
+		global.LogToFile()
 	}
 	// 加载东八区时区
 	sh, err := time.LoadLocation("Asia/Shanghai")
@@ -25,7 +25,7 @@ func main() {
 		log.Errorf("LoadLocation Failed: %s", err)
 		return
 	} else {
-		common.SetTimeZone(sh)
+		global.SetTimeZone(sh)
 	}
 
 	models.SetKey([]byte(cfg.EncryptionKey))

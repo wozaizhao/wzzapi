@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"wozaizhao.com/wzzapi/common"
+	"wozaizhao.com/wzzapi/global"
 	"wozaizhao.com/wzzapi/models"
 )
 
@@ -69,8 +69,8 @@ func AdminGetRoles(c *gin.Context) {
 	keyword := c.DefaultQuery("keyword", "")
 	pageNumParam := c.DefaultQuery("pageNum", "1")
 	pageSizeParam := c.DefaultQuery("pageSize", "10")
-	pageNum, _ := common.ParseInt(pageNumParam)
-	pageSize, _ := common.ParseInt(pageSizeParam)
+	pageNum, _ := global.ParseInt(pageNumParam)
+	pageSize, _ := global.ParseInt(pageSizeParam)
 	roles, err := models.GetRoles(int(pageNum), int(pageSize), keyword)
 
 	if err != nil {
