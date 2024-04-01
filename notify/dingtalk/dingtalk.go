@@ -58,7 +58,7 @@ type Markdown struct {
 func (c *NotifyConfig) Config(gConf global.NotifySettings) error {
 	c.NotifyKind = "dingtalk"
 	c.NotifyFormat = global.Markdown
-	c.NotifySendFunc = c.SendDingtalkNotification
+	// c.NotifySendFunc = c.SendDingtalkNotification
 	c.DefaultNotify.Config(gConf)
 	log.Debugf("Notification [%s] - [%s] configuration: %+v", c.NotifyKind, c.NotifyName, c)
 	return nil

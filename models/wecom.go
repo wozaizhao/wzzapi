@@ -23,12 +23,12 @@ func (NotifyWecom) TableName() string {
 	return "notify_wecom"
 }
 
-func (n *NotifyWecom) BeforeSave() (err error) {
+func (n *NotifyWecom) BeforeSave(tx *gorm.DB) (err error) {
 	n.WebhookURL = encrypt(n.WebhookURL)
 	return nil
 }
 
-func (n *NotifyWecom) AfterFind() error {
+func (n *NotifyWecom) AfterFind(tx *gorm.DB) error {
 	cipherToken := decrypt(n.WebhookURL)
 	n.WebhookURL = global.MaskSensitiveInfo(cipherToken, 5, 6, "*")
 	return nil

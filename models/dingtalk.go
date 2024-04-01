@@ -23,13 +23,13 @@ func (NotifyDingtalk) TableName() string {
 	return "notify_dingtalk"
 }
 
-func (n *NotifyDingtalk) BeforeSave() (err error) {
+func (n *NotifyDingtalk) BeforeSave(tx *gorm.DB) (err error) {
 	n.SignSecret = encrypt(n.SignSecret)
 	n.WebhookURL = encrypt(n.WebhookURL)
 	return nil
 }
 
-func (n *NotifyDingtalk) AfterFind() error {
+func (n *NotifyDingtalk) AfterFind(tx *gorm.DB) error {
 	cipherSign := decrypt(n.SignSecret)
 	n.SignSecret = global.MaskSensitiveInfo(cipherSign, 5, 6, "*")
 	cipherToken := decrypt(n.WebhookURL)

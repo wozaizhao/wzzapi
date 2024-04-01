@@ -40,7 +40,7 @@ type NotifyConfig struct {
 func (c *NotifyConfig) Config(gConf global.NotifySettings) error {
 	c.NotifyKind = "wecom"
 	c.NotifyFormat = global.Markdown
-	c.NotifySendFunc = c.SendWecom
+	// c.NotifySendFunc = c.SendWecom
 	c.DefaultNotify.Config(gConf)
 	log.Debugf("Notification [%s] - [%s] configuration: %+v", c.NotifyKind, c.NotifyName, c)
 	return nil
