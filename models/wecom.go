@@ -29,8 +29,8 @@ func (n *NotifyWecom) BeforeSave(tx *gorm.DB) (err error) {
 }
 
 func (n *NotifyWecom) AfterFind(tx *gorm.DB) error {
-	cipherToken := decrypt(n.WebhookURL)
-	n.WebhookURL = global.MaskSensitiveInfo(cipherToken, 5, 6, "*")
+	webhookURL := decrypt(n.WebhookURL)
+	n.WebhookURL = global.MaskSensitiveInfo(webhookURL, len(webhookURL)-20, 20, "*")
 	return nil
 }
 
