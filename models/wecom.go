@@ -35,9 +35,11 @@ func (n *NotifyWecom) AfterFind(tx *gorm.DB) error {
 }
 
 // 增加
-func CreateNotifyWecom(webhookURL, remark string, userID uint) error {
+func CreateNotifyWecom(name, webhookURL, remark string, userID uint, dry bool) error {
 	notify := NotifyWecom{Remark: remark, CreatedBy: userID}
 	notify.WebhookURL = webhookURL
+	notify.NotifyName = name
+	notify.Dry = dry
 	result := DB.Create(&notify)
 	err := result.Error
 	return err

@@ -43,10 +43,12 @@ func (n *NotifyDingtalk) AfterFind(tx *gorm.DB) error {
 }
 
 // 增加
-func CreateNotifyDingtalk(webhookURL, signSecret, remark string, userID uint) error {
+func CreateNotifyDingtalk(name, webhookURL, signSecret, remark string, userID uint, dry bool) error {
 	notify := NotifyDingtalk{Remark: remark, CreatedBy: userID}
 	notify.WebhookURL = webhookURL
 	notify.SignSecret = signSecret
+	notify.NotifyName = name
+	notify.Dry = dry
 	result := DB.Create(&notify)
 	err := result.Error
 	return err

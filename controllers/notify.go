@@ -10,9 +10,11 @@ type platform struct {
 }
 
 type adminAddNotifyParam struct {
+	Name       string `json:"name" binding:"required"`
 	WebHookURL string `json:"webHookURL" binding:"required"`
 	SignSecret string `json:"signSecret"`
 	Remark     string `json:"remark"`
+	Dry        bool   `json:"dry" binding:"required"`
 	platform
 }
 
@@ -24,13 +26,13 @@ func AdminAddNotify(c *gin.Context) {
 		return
 	}
 	if req.Platform == "dingtalk" {
-		err := models.CreateNotifyDingtalk(req.WebHookURL, req.SignSecret, req.Remark, adminID)
+		err := models.CreateNotifyDingtalk(req.Name, req.WebHookURL, req.SignSecret, req.Remark, adminID, req.Dry)
 		if err != nil {
 			RenderError(c, err)
 			return
 		}
 	} else if req.Platform == "wecom" {
-		err := models.CreateNotifyWecom(req.WebHookURL, req.Remark, adminID)
+		err := models.CreateNotifyWecom(req.Name, req.WebHookURL, req.Remark, adminID, req.Dry)
 		if err != nil {
 			RenderError(c, err)
 			return
