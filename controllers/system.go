@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"wozaizhao.com/wzzapi/global"
 	"wozaizhao.com/wzzapi/models"
@@ -298,4 +299,18 @@ func AdminGetAllRoles(c *gin.Context) {
 		return
 	}
 	RenderSuccess(c, roles, "get_all_roles_success")
+}
+
+func GetDictsByType(c *gin.Context) {
+	dictType := c.DefaultQuery("dictType", "")
+	if dictType != "" {
+		dicts, err := models.GetDictsByType(dictType)
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		RenderSuccess(c, dicts, "get_dicts_by_type_success")
+	} else {
+		RenderError(c, errors.New("no_type_found"))
+	}
 }
