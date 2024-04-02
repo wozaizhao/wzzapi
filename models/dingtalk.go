@@ -24,16 +24,21 @@ func (NotifyDingtalk) TableName() string {
 }
 
 func (n *NotifyDingtalk) BeforeSave(tx *gorm.DB) (err error) {
-	n.SignSecret = encrypt(n.SignSecret)
+	if n.SignSecret != "" {
+		n.SignSecret = encrypt(n.SignSecret)
+	}
 	n.WebhookURL = encrypt(n.WebhookURL)
 	return nil
 }
 
 func (n *NotifyDingtalk) AfterFind(tx *gorm.DB) error {
-	cipherSign := decrypt(n.SignSecret)
-	n.SignSecret = global.MaskSensitiveInfo(cipherSign, 5, 6, "*")
-	cipherToken := decrypt(n.WebhookURL)
-	n.WebhookURL = global.MaskSensitiveInfo(cipherToken, 5, 6, "*")
+	if n.SignSecret != "" {
+		cipherSign := decrypt(n.SignSecret)
+		n.SignSecret = global.MaskSensitiveInfo(cipherSign, 5, 6, "*")
+	}
+
+	webhookURL := decrypt(n.WebhookURL)
+	n.WebhookURL = global.MaskSensitiveInfo(webhookURL, len(webhookURL)-20, 20, "*")
 	return nil
 }
 
