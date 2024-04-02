@@ -17,6 +17,7 @@ func SetupRouter() *gin.Engine {
 	// 任何人都可访问
 	r.POST("/login")
 	r.POST("/adminLogin", controllers.AdminLoginByPassword)
+	r.GET("/dicts", controllers.GetDictsByType)
 
 	// 注册用户可以访问 /user
 	user := r.Group("/user", controllers.UserAuth())
