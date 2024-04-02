@@ -31,10 +31,10 @@ type DefaultNotify struct {
 	NotifyKind   string        `json:"-"`
 	NotifyFormat global.Format `json:"-"`
 	// NotifySendFunc func(string, string) error `json:"-"`
-	NotifyName   string        `json:"name" jsonschema:"required,title=Notification Name,description=The name of the notification"`
-	Dry          bool          `json:"dry,omitempty" jsonschema:"title=Dry Run,description=If true the notification will not send the message"`
-	Timeout      time.Duration `json:"timeout,omitempty" jsonschema:"format=duration,title=Timeout,description=The timeout of the notification"`
-	global.Retry `json:"retry,omitempty" jsonschema:"title=Retry,description=The retry of the notification"`
+	NotifyName string        `json:"name" jsonschema:"required,title=Notification Name,description=The name of the notification"`
+	Dry        bool          `json:"dry,omitempty" jsonschema:"title=Dry Run,description=If true the notification will not send the message"`
+	Timeout    time.Duration `json:"timeout,omitempty" jsonschema:"format=duration,title=Timeout,description=The timeout of the notification"`
+	// global.Retry `json:"retry,omitempty" jsonschema:"title=Retry,description=The retry of the notification"`
 }
 
 // Kind returns the kind of the notification

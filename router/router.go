@@ -47,8 +47,12 @@ func SetupRouter() *gin.Engine {
 		admin.GET("/roles", controllers.AdminGetRoles)
 		admin.GET("/roles/:id/menus", controllers.AdminGetRoleMenus)
 		admin.GET("/allRoles", controllers.AdminGetAllRoles)
-		// 增加、删除、修改、查询通道
-
+		// 增加、删除、修改、查询notify
+		admin.POST("/notifies", controllers.AdminAddNotify)
+		admin.DELETE("/notifies/:id", controllers.AdminDeleteNotify)
+		admin.PUT("/notifies", controllers.AdminUpdateNotify)
+		admin.GET("/notifies", controllers.AdminGetNotifies)
+		admin.GET("/notifies/:id", controllers.AdminGetNotify)
 	}
 
 	return r
