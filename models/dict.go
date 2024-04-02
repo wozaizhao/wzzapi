@@ -32,7 +32,7 @@ func CreateDict(label, value, dictName, dictType, remark string) (dict Dict, err
 }
 
 func GetDictsByType(dictType string) (dicts []Dict, err error) {
-	err = DB.Where("type = ?", dictType).Find(&dicts).Error
+	err = DB.Where("dict_type = ?", dictType).Find(&dicts).Error
 	return dicts, err
 }
 
