@@ -1,8 +1,13 @@
 package controllers
 
 import (
+	"errors"
+
 	"github.com/gin-gonic/gin"
+	"wozaizhao.com/wzzapi/global"
 	"wozaizhao.com/wzzapi/models"
+	"wozaizhao.com/wzzapi/notify/dingtalk"
+	"wozaizhao.com/wzzapi/notify/wecom"
 )
 
 type platform struct {
@@ -118,4 +123,69 @@ func AdminGetNotify(c *gin.Context) {
 		}
 		RenderSuccess(c, notify, "get_notify_success")
 	}
+}
+
+type adminSendMessageParam struct {
+	Title   string `json:"title"`
+	Message string `json:"message" binding:"required"`
+	Dry     bool   `json:"dry"`
+	Sender  uint   `json:"sender" binding:"required"`
+	platform
+}
+
+func AdminSendMessage(c *gin.Context) {
+	adminID := c.MustGet("adminID").(uint)
+	var req adminSendMessageParam
+	if err := c.BindJSON(&req); err != nil {
+		RenderBadRequest(c, err)
+		return
+	}
+	if req.Platform == "dingtalk" {
+
+		sender, err := models.GetNotifyDingtalkByID(req.Sender, adminID)
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		conf := &dingtalk.NotifyConfig{
+			SignSecret: sender.SignSecret,
+			WebhookURL: sender.WebhookURL,
+		}
+		conf.Dry = req.Dry
+		err = conf.Config(global.NotifySettings{})
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		err = conf.SendDingtalkNotification(req.Title, req.Message)
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		RenderSuccess(c, "", "send_dingtalk_notification_success")
+	} else if req.Platform == "wecom" {
+		sender, err := models.GetNotifyWecomByID(req.Sender, adminID)
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		conf := &wecom.NotifyConfig{
+			WebhookURL: sender.WebhookURL,
+		}
+		conf.Dry = req.Dry
+		err = conf.Config(global.NotifySettings{})
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		err = conf.SendWecomNotification(req.Message)
+		if err != nil {
+			RenderError(c, err)
+			return
+		}
+		RenderSuccess(c, "", "send_wecom_notification_success")
+	} else {
+		RenderBadRequest(c, errors.New("platform_is_empty"))
+	}
+
 }

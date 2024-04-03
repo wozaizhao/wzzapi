@@ -54,6 +54,8 @@ func SetupRouter() *gin.Engine {
 		admin.PUT("/notifies", controllers.AdminUpdateNotify)
 		admin.GET("/notifies", controllers.AdminGetNotifies)
 		admin.GET("/notifies/:id", controllers.AdminGetNotify)
+		// 即时发送消息
+		admin.POST("/send", controllers.AdminSendMessage)
 	}
 
 	return r
