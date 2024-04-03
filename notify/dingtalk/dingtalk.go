@@ -38,7 +38,7 @@ import (
 // NotifyConfig is the dingtalk notification configuration
 type NotifyConfig struct {
 	base.DefaultNotify
-	WebhookURL string `json:"webhook" jsonschema:"required,format=uri,title=Webhook URL,description=The Dingtalk Robot Webhook URL"`
+	WebhookURL string `json:"-" jsonschema:"required,format=uri,title=Webhook URL,description=The Dingtalk Robot Webhook URL"`
 	SignSecret string `json:"secret,omitempty" jsonschema:"format=string,title=Secret,description=The Dingtalk Robot Secret"`
 }
 
