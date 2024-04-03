@@ -15,8 +15,9 @@ type NotifyWecom struct {
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 	wecom.NotifyConfig
-	CreatedBy uint   `json:"createdBy" gorm:"type:varchar(64);DEFAULT '';comment:创建人"`
-	Remark    string `json:"remark" gorm:"type:varchar(255);DEFAULT '';comment:备注"`
+	CreatedBy           uint   `json:"createdBy" gorm:"type:varchar(64);DEFAULT '';comment:创建人"`
+	Remark              string `json:"remark" gorm:"type:varchar(255);DEFAULT '';comment:备注"`
+	WebhookURLSensitive string `json:"webhook" gorm:"-"`
 }
 
 func (NotifyWecom) TableName() string {
@@ -30,7 +31,8 @@ func (n *NotifyWecom) BeforeSave(tx *gorm.DB) (err error) {
 
 func (n *NotifyWecom) AfterFind(tx *gorm.DB) error {
 	webhookURL := decrypt(n.WebhookURL)
-	n.WebhookURL = global.MaskSensitiveInfo(webhookURL, len(webhookURL)-20, 20, "*")
+	n.WebhookURL = webhookURL
+	n.WebhookURLSensitive = global.MaskSensitiveInfo(webhookURL, len(webhookURL)-20, 20, "*")
 	return nil
 }
 
