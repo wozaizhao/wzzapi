@@ -82,6 +82,10 @@ func (c *NotifyConfig) SendDingtalkNotification(title, msg string) error {
 			c.Kind(), c.Name(), dingtalk, err)
 	}
 
+	if c.Dry {
+		return nil
+	}
+
 	req, err := http.NewRequest(http.MethodPost, c.addSign(c.WebhookURL, c.SignSecret), bytes.NewBuffer([]byte(msgContent)))
 	if err != nil {
 		return err

@@ -68,6 +68,10 @@ func (c *NotifyConfig) SendWecomNotification(msg string) error {
 		log.Errorf("[%s / %s ] - %v, err: invalid json", c.Kind(), c.Name(), msgContent)
 	}
 
+	if c.Dry {
+		return nil
+	}
+
 	req, err := http.NewRequest(http.MethodPost, c.WebhookURL, bytes.NewBuffer([]byte(msgContent)))
 	if err != nil {
 		return err
