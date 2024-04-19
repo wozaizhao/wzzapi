@@ -30,3 +30,11 @@ type Notify struct {
 	Time        string         `json:"time" gorm:"type:varchar(20);DEFAULT '';comment:时间"`
 	Status      int            `json:"status" gorm:"type:tinyint(1);DEFAULT 0;comment:状态"`
 }
+
+func (Notify) TableName() string {
+	return "business_notify"
+}
+
+func CreateNotify() {
+
+}

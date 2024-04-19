@@ -35,6 +35,7 @@ type Config struct {
 	JwtSecret        string `yaml:"jwtsecret"`
 	EncryptionKey    string `yaml:"encryptionKey"`
 	*TecentSMSConfig `yaml:"TecentSMSConfig"`
+	*TecentCosConfig `yaml:"TecentCosConfig"`
 }
 
 type TecentSMSConfig struct {
@@ -46,6 +47,15 @@ type TecentSMSConfig struct {
 	REDIS_KEY_LOGIN_CODE    string `yaml:"REDIS_KEY_LOGIN_CODE"`
 	REDIS_KEY_REGISTER_CODE string `yaml:"REDIS_KEY_REGISTER_CODE"`
 	ExpirationMinutes       int    `yaml:"ExpirationMinutes"`
+}
+
+type TecentCosConfig struct {
+	SecretId   string `yaml:"SecretId"`
+	SecretKey  string `yaml:"SecretKey"`
+	Region     string `yaml:"Region"`
+	Bucket     string `yaml:"Bucket"`
+	BasePath   string `yaml:"BasePath"`
+	BaseOrigin string `yaml:"BaseOrigin"`
 }
 
 // GetConfig 获取配置

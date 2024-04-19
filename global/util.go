@@ -62,3 +62,8 @@ func MaskSensitiveInfo(s string, start int, maskNumber int, maskChars ...string)
 	}
 	return s[:start] + strings.Repeat(maskChar, end-start) + s[end:]
 }
+
+func GetFileNameFromUrl(url string) string {
+	fileName := strings.Split(url, "/")[len(strings.Split(url, "/"))-1]
+	return strings.Split(fileName, "?")[0]
+}
