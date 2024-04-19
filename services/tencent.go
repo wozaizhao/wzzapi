@@ -34,6 +34,9 @@ func UploadByFile(dir string, file *multipart.FileHeader) (string, error) {
 
 	fileName := global.GetSHA1Hash(global.GenerateCode(8) + file.Filename)
 	ext := filepath.Ext(file.Filename)
+	if fileName == "" || ext == "" {
+		return "", fmt.Errorf("fileName or ext is empty")
+	}
 	key := dir + "/" + fileName + ext
 
 	// 创建 COS 客户端
@@ -68,7 +71,16 @@ func UploadByUrl(dir, fileURL string) (string, error) {
 	region := cfg.TecentCosConfig.Region
 	bucket := cfg.TecentCosConfig.Bucket
 
-	key := dir + "/" + global.GetFileNameFromUrl(fileURL)
+	fileName := global.GetFileNameFromUrl(fileURL)
+	fileNameHash := global.GetSHA1Hash(global.GenerateCode(8) + fileName)
+	ext := filepath.Ext(fileName)
+
+	if fileName == "" || ext == "" {
+		return "", fmt.Errorf("fileName or ext is empty")
+	}
+
+	key := dir + "/" + fileNameHash + ext
+
 	// 获取文件内容
 	resp, err := http.Get(fileURL)
 	if err != nil {
