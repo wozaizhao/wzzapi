@@ -8,7 +8,7 @@ import (
 )
 
 type IDInUri struct {
-	ID string `uri:"id" binding:"required"`
+	ID uint `uri:"id" binding:"required"`
 }
 
 func RenderError(c *gin.Context, err error) {

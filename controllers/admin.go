@@ -96,12 +96,12 @@ func AdminUpdateAdmin(c *gin.Context) {
 	RenderSuccess(c, "", "update_admin_success")
 }
 
-type adminDeleteAdminParam struct {
-	ID uint `uri:"id" binding:"required"`
-}
+// type adminDeleteAdminParam struct {
+// 	ID uint `uri:"id" binding:"required"`
+// }
 
 func AdminDeleteAdmin(c *gin.Context) {
-	var req adminDeleteAdminParam
+	var req IDInUri
 	if err := c.ShouldBindUri(&req); err != nil {
 		RenderError(c, err)
 		return

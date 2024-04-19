@@ -18,6 +18,7 @@ func SetupRouter() *gin.Engine {
 	r.POST("/login")
 	r.POST("/adminLogin", controllers.AdminLoginByPassword)
 	r.GET("/dicts", controllers.GetDictsByType)
+	r.GET("/resources", controllers.GetResources)
 
 	// 注册用户可以访问 /user
 	user := r.Group("/user", controllers.UserAuth())
@@ -55,6 +56,12 @@ func SetupRouter() *gin.Engine {
 		admin.PUT("/notifies", controllers.AdminUpdateNotify)
 		admin.GET("/notifies", controllers.AdminGetNotifies)
 		admin.GET("/notifies/:id", controllers.AdminGetNotify)
+		// 增加、删除、修改、查询resources
+		admin.POST("/resources", controllers.AdminAddResource)
+		admin.DELETE("/resources/:id", controllers.AdminDeleteResource)
+		admin.PUT("/resources", controllers.AdminUpdateResource)
+		admin.POST("/resource/setVisible", controllers.AdminSetResourceVisible)
+
 		// 即时发送消息
 		admin.POST("/send", controllers.AdminSendMessage)
 	}
