@@ -18,6 +18,7 @@ type Resource struct {
 	Comment        string         `json:"comment" gorm:"type:varchar(255);DEFAULT '';comment:评论"`
 	Visible        bool           `json:"visible" gorm:"type:tinyint(1);DEFAULT 0;comment:是否可见"`
 	Tags           string         `json:"tags" gorm:"type:varchar(255);DEFAULT '';comment:标签"`
+	Sort           uint           `json:"sort" gorm:"comment:排序"`
 	ClickCount     int            `json:"clickCount" gorm:"type:int;DEFAULT 0;comment:点击数"`
 	CreatedByAdmin uint           `json:"createdByAdmin"`
 	CreatedByUser  uint           `json:"createdByUser"`
@@ -61,7 +62,7 @@ func GetResources(pageNum, pageSize int, tag string) (resources []Resource, err 
 	if pageNum != 0 && pageSize != 0 {
 		db = db.Scopes(Paginate(pageNum, pageSize))
 	}
-	err = db.Order("created_at asc").Find(&resources).Error
+	err = db.Order("sort desc,click_count desc").Find(&resources).Error
 	return resources, err
 }
 
