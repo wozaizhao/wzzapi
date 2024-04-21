@@ -81,13 +81,13 @@ func AdminSetResourceVisible(c *gin.Context) {
 }
 
 func AdminAddResource(c *gin.Context) {
-	userID := c.MustGet("userID").(uint)
+	adminID := c.MustGet("adminID").(uint)
 	var r Resource
 	if err := c.ShouldBindJSON(&r); err != nil {
 		RenderBadRequest(c, err)
 		return
 	}
-	err := models.CreateResource(r.Title, r.Logo, r.Url, r.Comment, r.Tags, userID)
+	err := models.CreateResource(r.Title, r.Logo, r.Url, r.Comment, r.Tags, adminID)
 	if err != nil {
 		RenderFail(c, err.Error())
 		return
