@@ -23,3 +23,25 @@ func Upload(c *gin.Context) {
 	RenderSuccess(c, uploadedURL, "upload_success")
 
 }
+
+type uploadByURLReq struct {
+	Url string `json:"url"`
+	Dir string `json:"dir"`
+}
+
+func UploadByURL(c *gin.Context) {
+	var req uploadByURLReq
+	if err := c.BindJSON(&req); err != nil {
+		RenderBadRequest(c, err)
+		return
+	}
+	uploadedURL, err := services.UploadByUrl(req.Dir, req.Url)
+
+	if err != nil {
+		RenderFail(c, err.Error())
+		return
+	}
+
+	RenderSuccess(c, uploadedURL, "upload_success")
+
+}

@@ -30,6 +30,7 @@ func SetupRouter() *gin.Engine {
 	{
 		admin.GET("/current", controllers.GetCurrentAdmin)
 		admin.POST("/upload", controllers.Upload)
+		admin.POST("/uploadByUrl", controllers.UploadByURL)
 		// 增加、删除、修改、查询PC端用户
 		admin.POST("/admins", controllers.AdminAddAdmin)
 		admin.DELETE("/admins/:id", controllers.AdminDeleteAdmin)
