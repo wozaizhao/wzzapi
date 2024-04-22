@@ -61,7 +61,7 @@ func SetupRouter() *gin.Engine {
 		admin.POST("/resources", controllers.AdminAddResource)
 		admin.DELETE("/resources/:id", controllers.AdminDeleteResource)
 		admin.PUT("/resources", controllers.AdminUpdateResource)
-		admin.POST("/resource/setVisible", controllers.AdminSetResourceVisible)
+		admin.POST("/resources/setVisible", controllers.AdminSetResourceVisible)
 
 		// 即时发送消息
 		admin.POST("/send", controllers.AdminSendMessage)
