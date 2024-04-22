@@ -54,8 +54,11 @@ func SetResourceVisible(id uint, visible bool) error {
 	return nil
 }
 
-func GetResources(pageNum, pageSize int, tag string) (resources []Resource, err error) {
+func GetResources(pageNum, pageSize int, tag string, filterByVisible, visible bool) (resources []Resource, err error) {
 	db := DB
+	if filterByVisible {
+		db = db.Scopes(FieldEqual("visible", visible))
+	}
 	if tag != "" {
 		db = db.Scopes(Search(tag, "tags"))
 	}
@@ -66,9 +69,12 @@ func GetResources(pageNum, pageSize int, tag string) (resources []Resource, err 
 	return resources, err
 }
 
-func GetResourcesCount(tag string) int64 {
+func GetResourcesCount(tag string, filterByVisible, visible bool) int64 {
 	var count int64
 	db := DB
+	if filterByVisible {
+		db = db.Scopes(FieldEqual("visible", visible))
+	}
 	if tag != "" {
 		db = db.Scopes(Search(tag, "tags"))
 	}

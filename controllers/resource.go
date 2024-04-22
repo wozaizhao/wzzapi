@@ -2,12 +2,34 @@ package controllers
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"wozaizhao.com/wzzapi/global"
 	"wozaizhao.com/wzzapi/models"
 )
 
 // get resources
+func AdminGetResources(c *gin.Context) {
+	// userID := c.MustGet("userID").(uint)
+	pageParam := c.DefaultQuery("page", "1")
+	pageSizeParam := c.DefaultQuery("pageSize", "10")
+	tagParam := c.DefaultQuery("tag", "")
+
+	page, _ := strconv.Atoi(pageParam)
+	pageSize, _ := strconv.Atoi(pageSizeParam)
+	resources, err := models.GetResources(page, pageSize, tagParam, global.NO_FILTER, global.UNVISIBLE)
+	if err != nil {
+		RenderFail(c, err.Error())
+		return
+	}
+	count := models.GetResourcesCount(tagParam, global.NO_FILTER, global.UNVISIBLE)
+	var res commonList
+	res.List = resources
+	res.Total = count
+	RenderSuccess(c, res, "get_resources_success")
+}
+
 func GetResources(c *gin.Context) {
 	// userID := c.MustGet("userID").(uint)
 	pageParam := c.DefaultQuery("page", "1")
@@ -16,12 +38,12 @@ func GetResources(c *gin.Context) {
 
 	page, _ := strconv.Atoi(pageParam)
 	pageSize, _ := strconv.Atoi(pageSizeParam)
-	resources, err := models.GetResources(page, pageSize, tagParam)
+	resources, err := models.GetResources(page, pageSize, tagParam, global.FILTER_BY_VISIBLE, global.VISIBLE)
 	if err != nil {
 		RenderFail(c, err.Error())
 		return
 	}
-	count := models.GetResourcesCount(tagParam)
+	count := models.GetResourcesCount(tagParam, global.FILTER_BY_VISIBLE, global.VISIBLE)
 	var res commonList
 	res.List = resources
 	res.Total = count
