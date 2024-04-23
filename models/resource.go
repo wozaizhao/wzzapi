@@ -65,7 +65,7 @@ func GetResources(pageNum, pageSize int, tag string, filterByVisible, visible bo
 	if pageNum != 0 && pageSize != 0 {
 		db = db.Scopes(Paginate(pageNum, pageSize))
 	}
-	err = db.Order("sort desc,click_count desc").Find(&resources).Error
+	err = db.Order("sort desc,click_count desc,created_at desc").Find(&resources).Error
 	return resources, err
 }
 
